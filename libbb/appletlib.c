@@ -1028,6 +1028,8 @@ get_script_content(unsigned n UNUSED_PARAM)
 
 #if ENABLE_BUILD_LIBBUSYBOX
 int lbb_main(char **argv)
+#elif defined(BUSYBOX_EMBEDDED)
+int busybox_main(int argc, char **argv)
 #else
 int main(int argc UNUSED_PARAM, char **argv)
 #endif

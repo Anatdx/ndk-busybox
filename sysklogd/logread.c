@@ -120,8 +120,8 @@ int logread_main(int argc UNUSED_PARAM, char **argv)
 	if (log_shmid == -1)
 		bb_perror_msg_and_die("can't %s syslogd buffer", "find");
 
-	/* Attach shared memory to our char* */
-	shbuf = shmat(log_shmid, NULL, SHM_RDONLY);
+	/* Attach shared memory to our char* (cast for NDK where shmat may return int) */
+	shbuf = (struct shbuf_ds *)shmat(log_shmid, NULL, SHM_RDONLY);
 	if (shbuf == NULL)
 		bb_perror_msg_and_die("can't %s syslogd buffer", "access");
 

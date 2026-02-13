@@ -239,12 +239,12 @@ static int do_em_all_in_fstab(void)
 			/* swapon -a should ignore entries with noauto,
 			 * but swapoff -a should process them
 			 */
-			if (do_swapoff || hasmntopt(m, MNTOPT_NOAUTO) == NULL) {
+			if (do_swapoff || (char *)hasmntopt(m, MNTOPT_NOAUTO) == NULL) {
 				/* each swap space might have different flags */
 				/* save global flags for the next round */
 				save_g_flags();
 				if (ENABLE_FEATURE_SWAPON_DISCARD) {
-					char *p = hasmntopt(m, "discard");
+					char *p = (char *)hasmntopt(m, "discard");
 					if (p) {
 						/* move to '=' or to end of string */
 						p += 7;
@@ -252,7 +252,7 @@ static int do_em_all_in_fstab(void)
 					}
 				}
 				if (ENABLE_FEATURE_SWAPON_PRI) {
-					char *p = hasmntopt(m, "pri");
+					char *p = (char *)hasmntopt(m, "pri");
 					if (p) {
 						set_priority_flag(p + 4);
 					}

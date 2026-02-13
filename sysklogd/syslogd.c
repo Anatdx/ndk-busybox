@@ -582,8 +582,8 @@ static void ipcsyslog_init(void)
 		bb_simple_perror_msg_and_die("shmget");
 	}
 
-	G.shbuf = shmat(G.shmid, NULL, 0);
-	if (G.shbuf == (void*) -1L) { /* shmat has bizarre error return */
+	G.shbuf = (struct shbuf_ds *)shmat(G.shmid, NULL, 0);
+	if (G.shbuf == (struct shbuf_ds *)(void*) -1L) { /* shmat has bizarre error return */
 		bb_simple_perror_msg_and_die("shmat");
 	}
 
