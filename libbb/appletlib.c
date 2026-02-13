@@ -1130,6 +1130,21 @@ int main(int argc UNUSED_PARAM, char **argv)
 	}
 
 	parse_config_file(); /* ...maybe, if FEATURE_SUID_CONFIG */
+# if !ENABLE_BUSYBOX
+	/* Embedded with ENABLE_BUSYBOX=0: "busybox" is not in applet table; show list when no applet given */
+	if (strcmp(applet_name, "busybox") == 0 && !argv[1]) {
+		const char *a = applet_names;
+		dup2(1, 2);
+		full_write2_str("BusyBox multi-call.\n");
+		while (*a) {
+			full_write2_str(a);
+			full_write2_str("\n");
+			while (*a++ != '\0')
+				continue;
+		}
+		return 0;
+	}
+# endif
 	run_applet_and_exit(applet_name, argv);
 
 #endif
