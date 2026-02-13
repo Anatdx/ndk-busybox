@@ -64,6 +64,8 @@ target_compile_options(busybox PRIVATE
   -w
   -Wno-implicit-function-declaration
 )
+# So override_selinux_android.h skips C declarations when preprocessing .S (avoids "expected register" errors)
+target_compile_options(busybox PRIVATE $<$<COMPILE_LANGUAGE:ASM>:-D__ASSEMBLER__>)
 # Pre-include autoconf (Android uses autoconf_android.h which also disables SELinux for NDK)
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
   target_compile_options(busybox PRIVATE -include ${CMAKE_CURRENT_SOURCE_DIR}/include/autoconf_android.h)

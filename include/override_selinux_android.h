@@ -16,12 +16,14 @@
 #undef IF_NOT_BUSYBOX
 #define IF_NOT_BUSYBOX(...) __VA_ARGS__
 
+#ifndef __ASSEMBLER__
 int chcon_main(int argc, char **argv);
 int getenforce_main(int argc, char **argv);
 int runcon_main(int argc, char **argv);
 int selinuxenabled_main(int argc, char **argv);
 int sestatus_main(int argc, char **argv);
 int setenforce_main(int argc, char **argv);
+#endif
 
 #undef CONFIG_SELINUX
 #define CONFIG_SELINUX 0
