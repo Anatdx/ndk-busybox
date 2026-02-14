@@ -36,6 +36,27 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#if defined(__GLIBC__) || defined(__linux__)
+/* glibc does not provide strlcpy/strlcat; provide compat for host build. */
+static size_t strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t len = strlen(src);
+	if (size != 0) {
+		size_t n = (len >= size) ? size - 1 : len;
+		memcpy(dst, src, n);
+		dst[n] = '\0';
+	}
+	return len;
+}
+static size_t strlcat(char *dst, const char *src, size_t size)
+{
+	size_t dlen = strnlen(dst, size);
+	if (dlen == size)
+		return dlen + strlen(src);
+	return dlen + strlcpy(dst + dlen, src, size - dlen);
+}
+#endif
+
 char * __wrap_realpath(const char * __restrict path, char * __restrict resolved)
 {
     struct stat sb;

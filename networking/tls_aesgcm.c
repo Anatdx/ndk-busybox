@@ -4,7 +4,11 @@
  * Licensed under GPLv2, see file LICENSE in this source tree.
  */
 
+#include <limits.h>
 #include "tls.h"
+#ifndef LONG_BIT
+#define LONG_BIT (sizeof(unsigned long) * 8)
+#endif
 
 typedef uint8_t byte;
 typedef uint32_t word32;

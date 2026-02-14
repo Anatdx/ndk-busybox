@@ -27,8 +27,26 @@
 #include <sys/sem.h>
 #include "libbb.h"
 
+/* POSIX/glibc do not define union semun in sys/sem.h; application must define it. */
+#ifndef _SEM_SEMUN_DEFINED
+#define _SEM_SEMUN_DEFINED
+union semun {
+	int val;
+	struct semid_ds* buf;
+	unsigned short* array;
+	struct seminfo* __buf;
+};
+#endif
+
 #ifndef __NR_semctl
 #define __NR_semctl 66
+#endif
+
+#ifndef IPC_INFO
+#define IPC_INFO 3
+#endif
+#ifndef SEM_INFO
+#define SEM_INFO 19
 #endif
 
 /* code from GLIBC */

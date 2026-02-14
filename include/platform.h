@@ -615,7 +615,8 @@ static ALWAYS_INLINE void *mempcpy(void *dest, const void *src, size_t len)
 extern char *strcasestr(const char *s, const char *pattern) FAST_FUNC;
 #endif
 
-#ifndef HAVE_STRCHRNUL
+/* Declare so compiler sees correct type; on Linux glibc string.h only declares with _GNU_SOURCE */
+#if !defined(HAVE_STRCHRNUL) || (defined(__linux__) && defined(__GLIBC__))
 extern char *strchrnul(const char *s, int c) FAST_FUNC;
 #endif
 

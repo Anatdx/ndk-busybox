@@ -1,6 +1,9 @@
 /*
 Copyright (c) 2013, Kenneth MacKay
 All rights reserved.
+*/
+#define _GNU_SOURCE 1
+/*
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -22,6 +25,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <sys/socket.h>
 #include "ifaddrs.h"
 
 #include <string.h>
@@ -31,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/socket.h>
 #include <net/if_arp.h>
 #include <netinet/in.h>
+#include <linux/if_packet.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
@@ -223,6 +228,12 @@ static size_t maxSize(size_t a, size_t b)
     return (a > b ? a : b);
 }
 
+/* Offset of payload in struct sockaddr (sa_family is 2 bytes, then sa_data). */
+#define SOCKADDR_SA_DATA_OFFSET 2
+/* Offsets in struct sockaddr_ll so we avoid relying on member names (may be hidden by macros). */
+#define SOCKADDR_LL_HALEN_OFFSET  11
+#define SOCKADDR_LL_ADDR_OFFSET   12
+
 static size_t calcAddrLen(sa_family_t p_family, int p_dataSize)
 {
     switch(p_family)
@@ -232,9 +243,9 @@ static size_t calcAddrLen(sa_family_t p_family, int p_dataSize)
         case AF_INET6:
             return sizeof(struct sockaddr_in6);
         case AF_PACKET:
-            return maxSize(sizeof(struct sockaddr_ll), offsetof(struct sockaddr_ll, sll_addr) + p_dataSize);
+            return sizeof(struct sockaddr_ll);
         default:
-            return maxSize(sizeof(struct sockaddr), offsetof(struct sockaddr, sa_data) + p_dataSize);
+            return maxSize(sizeof(struct sockaddr), (size_t)SOCKADDR_SA_DATA_OFFSET + (size_t)p_dataSize);
     }
 }
 
@@ -249,11 +260,11 @@ static void makeSockaddr(sa_family_t p_family, struct sockaddr *p_dest, void *p_
             memcpy(&((struct sockaddr_in6*)p_dest)->sin6_addr, p_data, p_size);
             break;
         case AF_PACKET:
-            memcpy(((struct sockaddr_ll*)p_dest)->sll_addr, p_data, p_size);
-            ((struct sockaddr_ll*)p_dest)->sll_halen = p_size;
+            memcpy((char *)p_dest + SOCKADDR_LL_ADDR_OFFSET, p_data, p_size);
+            *(unsigned char *)((char *)p_dest + SOCKADDR_LL_HALEN_OFFSET) = (unsigned char)p_size;
             break;
         default:
-            memcpy(p_dest->sa_data, p_data, p_size);
+            memcpy((char *)p_dest + SOCKADDR_SA_DATA_OFFSET, p_data, p_size);
             break;
     }
     p_dest->sa_family = p_family;

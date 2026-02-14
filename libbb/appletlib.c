@@ -749,7 +749,7 @@ get_script_content(unsigned n)
 }
 # endif /* NUM_SCRIPTS > 0 */
 
-# if ENABLE_BUSYBOX
+# if ENABLE_BUSYBOX && !defined(BUSYBOX_EMBEDDED)
 #  if ENABLE_FEATURE_SH_STANDALONE && ENABLE_FEATURE_TAB_COMPLETION
     /*
      * Insert "busybox" into applet table as well.

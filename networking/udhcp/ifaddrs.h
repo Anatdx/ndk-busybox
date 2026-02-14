@@ -26,6 +26,14 @@
 #ifndef	_IFADDRS_H_
 #define	_IFADDRS_H_
 
+/* Caller must include <sys/socket.h> before this header for struct sockaddr */
+
+#ifdef __GLIBC__
+/* <net/if.h> defines ifa_dstaddr (and possibly ifa_broadaddr) as macros; undef to use as member names */
+#undef ifa_dstaddr
+#undef ifa_broadaddr
+#endif
+
 struct ifaddrs {
 	struct ifaddrs  *ifa_next;
 	char		*ifa_name;

@@ -6,6 +6,7 @@
  */
 #include "common.h"
 #include "d6_common.h"
+#include <sys/socket.h>
 #include <net/if.h>
 #include "ifaddrs.h"
 #include <netpacket/packet.h>

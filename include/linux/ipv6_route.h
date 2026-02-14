@@ -36,7 +36,8 @@
 
 #define RTF_LOCAL	0x80000000
 
-
+/* glibc provides in6_rtmsg in net/route.h; avoid redefinition */
+#if !defined(__GLIBC__)
 struct in6_rtmsg {
 	struct in6_addr		rtmsg_dst;
 	struct in6_addr		rtmsg_src;
@@ -49,6 +50,7 @@ struct in6_rtmsg {
         __u32			rtmsg_flags;
 	int			rtmsg_ifindex;
 };
+#endif
 
 #define RTMSG_NEWDEVICE		0x11
 #define RTMSG_DELDEVICE		0x12

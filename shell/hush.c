@@ -423,6 +423,10 @@
 #endif
 
 #include "NUM_APPLETS.h"
+#include <signal.h>
+#ifndef sighandler_t
+typedef __sighandler_t sighandler_t;
+#endif
 #if NUM_APPLETS == 1
 /* STANDALONE does not make sense, and won't compile */
 # undef CONFIG_FEATURE_SH_STANDALONE

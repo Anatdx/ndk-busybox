@@ -38,6 +38,9 @@
 #ifndef SCHED_IDLE
 # define SCHED_IDLE 5
 #endif
+#ifndef SCHED_BATCH
+# define SCHED_BATCH 3
+#endif
 
 //musl has no __MUSL__ or similar define to check for,
 //but its <sys/types.h> has these lines:

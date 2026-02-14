@@ -99,12 +99,16 @@ void FAST_FUNC print_login_issue(const char *issue_file, const char *tty)
 			case 'm':
 				outbuf = uts.machine;
 				break;
-/* The field domainname of struct utsname is Linux specific. */
+/* The field domainname of struct utsname is Linux specific; glibc exposes it as __domainname. */
 #if defined(__linux__)
 			case 'D':
 			case 'o':
 			case 'O':
+# if defined(__GLIBC__)
+				outbuf = uts.__domainname;
+# else
 				outbuf = uts.domainname;
+# endif
 				break;
 #endif
 			case 'd':

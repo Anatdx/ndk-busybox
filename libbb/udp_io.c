@@ -6,6 +6,7 @@
  *
  * Licensed under GPLv2, see file LICENSE in this source tree.
  */
+#define _GNU_SOURCE 1  /* struct in6_pktinfo in netinet/in.h */
 #include "libbb.h"
 
 #if defined(IPV6_PKTINFO) && !defined(IPV6_RECVPKTINFO)

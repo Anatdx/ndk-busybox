@@ -54,6 +54,9 @@
 #ifndef CLONE_NEWNET
 # define CLONE_NEWNET  0x40000000
 #endif
+#ifndef CLONE_NEWNS
+# define CLONE_NEWNS   0x00020000
+#endif
 
 #include <sys/mount.h>
 #ifndef MS_REC
