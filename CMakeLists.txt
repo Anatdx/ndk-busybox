@@ -63,6 +63,7 @@ target_compile_definitions(busybox PUBLIC
 target_compile_options(busybox PRIVATE
   -w
   -Wno-implicit-function-declaration
+  -Wno-int-conversion
 )
 # So override_selinux_android.h skips C declarations when preprocessing .S (avoids "expected register" errors)
 target_compile_options(busybox PRIVATE $<$<COMPILE_LANGUAGE:ASM>:-D__ASSEMBLER__>)

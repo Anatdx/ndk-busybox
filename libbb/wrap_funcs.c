@@ -36,8 +36,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#if defined(__GLIBC__) || defined(__linux__)
-/* glibc does not provide strlcpy/strlcat; provide compat for host build. */
+/* Provide strlcpy/strlcat only when libc does not (glibc < 2.38; Android bionic has them). */
+#if (defined(__GLIBC__) || defined(__linux__)) && !defined(__ANDROID__) \
+    && (!defined(__GLIBC__) || !defined(__GLIBC_MINOR__) || (__GLIBC__ < 2) || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 38))
 static size_t strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t len = strlen(src);

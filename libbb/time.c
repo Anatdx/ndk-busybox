@@ -44,7 +44,7 @@ int FAST_FUNC parse_datestr(const char *date_str, struct tm *ptm)
 	save = *ptm;
 	fmt = fmt_str;
 	while (*fmt) {
-		endp = strptime(date_str, fmt, ptm);
+		endp = (char *)strptime(date_str, fmt, ptm);
 		if (endp && *endp == '\0') {
 # if ENABLE_FEATURE_TIMEZONE
 			if (strchr(fmt, 'z')) {
