@@ -48,7 +48,11 @@
 #include <sys/cdefs.h>
 
 #if defined(__ANDROID__) && !defined(_SIZE_T_DECLARED)
+#ifdef __size_t
 typedef	__size_t	size_t;
+#else
+/* NDK/bionic: size_t already from <stddef.h> */
+#endif
 #define	_SIZE_T_DECLARED
 #endif
 
