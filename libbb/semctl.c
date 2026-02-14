@@ -27,8 +27,8 @@
 #include <sys/sem.h>
 #include "libbb.h"
 
-/* POSIX/glibc do not define union semun in sys/sem.h; application must define it. */
-#ifndef _SEM_SEMUN_DEFINED
+/* POSIX/glibc do not define union semun in sys/sem.h; Android NDK does. */
+#if !defined(_SEM_SEMUN_DEFINED) && !defined(__ANDROID__)
 #define _SEM_SEMUN_DEFINED
 union semun {
 	int val;
