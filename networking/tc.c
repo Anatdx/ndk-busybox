@@ -49,6 +49,9 @@
 #include "libiproute/ip_common.h"
 #include "libiproute/rt_names.h"
 #include <linux/pkt_sched.h> /* for the TC_H_* macros */
+#ifdef __ANDROID__
+# include "android_pkt_sched_compat.h"
+#endif
 
 /* This is the deprecated multiqueue interface */
 #ifndef TCA_PRIO_MAX

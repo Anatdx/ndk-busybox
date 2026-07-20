@@ -96,6 +96,7 @@ set(BUSYBOX_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/nice.c
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/nl.c
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/nohup.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/nproc.c
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/od.c
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/paste.c
   ${CMAKE_CURRENT_SOURCE_DIR}/coreutils/printenv.c
@@ -155,7 +156,6 @@ set(BUSYBOX_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/findutils/find.c
   ${CMAKE_CURRENT_SOURCE_DIR}/findutils/grep.c
   ${CMAKE_CURRENT_SOURCE_DIR}/findutils/xargs.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/init/halt.c
   ${CMAKE_CURRENT_SOURCE_DIR}/klibc-utils/nuke.c
   ${CMAKE_CURRENT_SOURCE_DIR}/klibc-utils/resume.c
   ${CMAKE_CURRENT_SOURCE_DIR}/libbb/appletlib.c
@@ -410,6 +410,7 @@ set(BUSYBOX_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/route.c
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/slattach.c
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/ssl_client.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/networking/tc.c
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/tcpudp.c
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/tcpudp_perhost.c
   ${CMAKE_CURRENT_SOURCE_DIR}/networking/telnet.c
@@ -493,6 +494,7 @@ set(BUSYBOX_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/chrt.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/dmesg.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/eject.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/fallocate.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/fatattr.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/fbset.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/fdformat.c
@@ -515,9 +517,6 @@ set(BUSYBOX_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/lsusb.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mesg.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mkfs_ext2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mkfs_minix.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mkfs_reiser.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mkfs_vfat.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mkswap.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/more.c
   ${CMAKE_CURRENT_SOURCE_DIR}/util-linux/mount.c

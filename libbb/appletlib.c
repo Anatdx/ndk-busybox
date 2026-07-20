@@ -749,8 +749,11 @@ get_script_content(unsigned n)
 }
 # endif /* NUM_SCRIPTS > 0 */
 
-# if ENABLE_BUSYBOX && !defined(BUSYBOX_EMBEDDED)
-#  if ENABLE_FEATURE_SH_STANDALONE && ENABLE_FEATURE_TAB_COMPLETION
+# if ENABLE_BUSYBOX
+#  if defined(BUSYBOX_EMBEDDED)
+static int busybox_meta_main(char **argv)
+#  else
+#   if ENABLE_FEATURE_SH_STANDALONE && ENABLE_FEATURE_TAB_COMPLETION
     /*
      * Insert "busybox" into applet table as well.
      * This makes standalone shell tab-complete this name too.
@@ -762,11 +765,12 @@ get_script_content(unsigned n)
 //usage:#define busybox_full_usage ""
 //applet:IF_BUSYBOX(IF_FEATURE_SH_STANDALONE(IF_FEATURE_TAB_COMPLETION(APPLET(busybox, BB_DIR_BIN, BB_SUID_MAYBE))))
 int busybox_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
-#  else
-#   define busybox_main(argc,argv) busybox_main(argv)
+#   else
+#    define busybox_main(argc,argv) busybox_main(argv)
 static
-#  endif
+#   endif
 int busybox_main(int argc UNUSED_PARAM, char **argv)
+#  endif
 {
 	if (!argv[1]) {
 		/* Called without arguments */
@@ -978,7 +982,11 @@ static NORETURN void run_applet_and_exit(const char *name, char **argv)
 {
 #  if ENABLE_BUSYBOX
 	if (is_prefixed_with(name, "busybox"))
+#   if defined(BUSYBOX_EMBEDDED)
+		exit(busybox_meta_main(argv));
+#   else
 		exit(busybox_main(/*unused:*/ 0, argv));
+#   endif
 #  endif
 #  if NUM_APPLETS > 0
 	/* find_applet_by_name() search is more expensive, so goes second */

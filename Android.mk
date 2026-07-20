@@ -114,6 +114,7 @@ coreutils/mv.c \
 coreutils/nice.c \
 coreutils/nl.c \
 coreutils/nohup.c \
+coreutils/nproc.c \
 coreutils/od.c \
 coreutils/paste.c \
 coreutils/printenv.c \
@@ -173,7 +174,6 @@ editors/vi.c \
 findutils/find.c \
 findutils/grep.c \
 findutils/xargs.c \
-init/halt.c \
 klibc-utils/nuke.c \
 klibc-utils/resume.c \
 libbb/appletlib.c \
@@ -428,6 +428,7 @@ networking/pscan.c \
 networking/route.c \
 networking/slattach.c \
 networking/ssl_client.c \
+networking/tc.c \
 networking/tcpudp.c \
 networking/tcpudp_perhost.c \
 networking/telnet.c \
@@ -511,6 +512,7 @@ util-linux/cal.c \
 util-linux/chrt.c \
 util-linux/dmesg.c \
 util-linux/eject.c \
+util-linux/fallocate.c \
 util-linux/fatattr.c \
 util-linux/fbset.c \
 util-linux/fdformat.c \
@@ -533,9 +535,6 @@ util-linux/lspci.c \
 util-linux/lsusb.c \
 util-linux/mesg.c \
 util-linux/mkfs_ext2.c \
-util-linux/mkfs_minix.c \
-util-linux/mkfs_reiser.c \
-util-linux/mkfs_vfat.c \
 util-linux/mkswap.c \
 util-linux/more.c \
 util-linux/mount.c \

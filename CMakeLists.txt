@@ -36,22 +36,55 @@ if(BB_ARCH_FILTER AND NOT BB_ARCH_FILTER STREQUAL "none")
   set(BUSYBOX_SOURCES ${BUSYBOX_SOURCES_FILTERED})
 endif()
 
-# Android NDK has no selinux headers; exclude selinux applets and libbb/selinux_common.c,
-# and add stub mains so the applet table links.
+# Upstream Magisk links BusyBox against a static libselinux. The NDK sysroot
+# intentionally does not expose that private platform library, so build the
+# matching sources instead of silently replacing the applets with no-op stubs.
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-  set(BUSYBOX_SOURCES_FILTERED)
-  foreach(SRC ${BUSYBOX_SOURCES})
-    if(SRC MATCHES "selinux/.*\\.c$" OR SRC MATCHES "libbb/selinux_common\\.c$")
-      # skip
-    else()
-      list(APPEND BUSYBOX_SOURCES_FILTERED ${SRC})
-    endif()
-  endforeach()
-  list(APPEND BUSYBOX_SOURCES_FILTERED ${CMAKE_CURRENT_SOURCE_DIR}/android_selinux_stubs.c)
-  set(BUSYBOX_SOURCES ${BUSYBOX_SOURCES_FILTERED})
+  set(SELINUX_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/android/libselinux)
+  set(SELINUX_SRC ${SELINUX_ROOT}/src)
+  add_library(busybox_selinux STATIC
+    ${SELINUX_SRC}/booleans.c
+    ${SELINUX_SRC}/callbacks.c
+    ${SELINUX_SRC}/check_context.c
+    ${SELINUX_SRC}/compute_create.c
+    ${SELINUX_SRC}/context.c
+    ${SELINUX_SRC}/enabled.c
+    ${SELINUX_SRC}/fgetfilecon.c
+    ${SELINUX_SRC}/freecon.c
+    ${SELINUX_SRC}/fsetfilecon.c
+    ${SELINUX_SRC}/getenforce.c
+    ${SELINUX_SRC}/getfilecon.c
+    ${SELINUX_SRC}/init.c
+    ${SELINUX_SRC}/lgetfilecon.c
+    ${SELINUX_SRC}/lsetfilecon.c
+    ${SELINUX_SRC}/mapping.c
+    ${SELINUX_SRC}/policyvers.c
+    ${SELINUX_SRC}/procattr.c
+    ${SELINUX_SRC}/selinux_config.c
+    ${SELINUX_SRC}/selinux_internal.c
+    ${SELINUX_SRC}/sestatus.c
+    ${SELINUX_SRC}/setenforce.c
+    ${SELINUX_SRC}/setfilecon.c
+    ${SELINUX_SRC}/setrans_client.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/android_selinux_compat.c
+  )
+  target_include_directories(busybox_selinux PUBLIC ${SELINUX_ROOT}/include)
+  target_include_directories(busybox_selinux PRIVATE ${SELINUX_SRC})
+  target_compile_definitions(busybox_selinux PRIVATE
+    ANDROID
+    DISABLE_SETRANS
+    HAVE_REALLOCARRAY
+    HAVE_STRLCPY
+    fgets_unlocked=fgets
+  )
+  target_compile_options(busybox_selinux PRIVATE -w)
 endif()
 
 add_library(busybox STATIC ${BUSYBOX_SOURCES})
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+  target_link_libraries(busybox PUBLIC busybox_selinux)
+endif()
 
 target_include_directories(busybox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_definitions(busybox PUBLIC
@@ -65,14 +98,8 @@ target_compile_options(busybox PRIVATE
   -Wno-implicit-function-declaration
   -Wno-int-conversion
 )
-# So override_selinux_android.h skips C declarations when preprocessing .S (avoids "expected register" errors)
 target_compile_options(busybox PRIVATE $<$<COMPILE_LANGUAGE:ASM>:-D__ASSEMBLER__>)
-# Pre-include autoconf (Android uses autoconf_android.h which also disables SELinux for NDK)
-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-  target_compile_options(busybox PRIVATE -include ${CMAKE_CURRENT_SOURCE_DIR}/include/autoconf_android.h)
-else()
-  target_compile_options(busybox PRIVATE -include ${CMAKE_CURRENT_SOURCE_DIR}/include/autoconf.h)
-endif()
+target_compile_options(busybox PRIVATE -include ${CMAKE_CURRENT_SOURCE_DIR}/include/autoconf.h)
 
 # When embedded (e.g. into ksud), entry is busybox_main() not main()
 if(BUSYBOX_EMBEDDED)
